@@ -4,6 +4,8 @@ services:
                 image: postgres:latest
                 ports:
                         - '5433:5432'
+                volumes:
+                        - ./pgdata:/var/lib/postgresql/data
         web-app:
                 build:
                         context: ./frontend
@@ -12,15 +14,18 @@ services:
                         - /app/node_modules
                         - ./frontend:/app
                 ports:
-                        - '3000:3000'
+                        - '1234:1234'
                 restart: on-failure
                 container_name: web-app
+                environment:
+                        - PORT=1234
+                        - REACT_APP_ITEMS_API=http://localhost:3333/v1
         item-api:
                 build:
                         context: ./backend
                         dockerfile: Dockerfile.dev
                 ports:
-                        - '3001:3001'
+                        - '3333:3333'
                 restart: on-failure
                 container_name: item-api
                 volumes:
@@ -32,3 +37,4 @@ services:
                         - PGDATABASE=postgres
                         - PGPASSWORD=
                         - PGPORT=5432
+                        - PORT=3333
