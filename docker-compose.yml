@@ -3,9 +3,13 @@ services:
         itemdb:
                 image: postgres:latest
                 ports:
-                        - '5433:5432'
+                        - '5499:5432'
                 volumes:
-                        - ./pgdata:/var/lib/postgresql/data
+                        - ./pgdata:/var/lib/postgresql/data/pgdata
+                environment:
+                        POSTGRES_USER: postgres
+                        POSTGRES_PASSWORD: secret
+                        PGDATA: /var/lib/postgresql/data/pgdata
         web-app:
                 build:
                         context: ./frontend
@@ -35,6 +39,6 @@ services:
                         - PGUSER=postgres
                         - PGHOST=itemdb
                         - PGDATABASE=postgres
-                        - PGPASSWORD=
+                        - PGPASSWORD=secret
                         - PGPORT=5432
                         - PORT=3333
